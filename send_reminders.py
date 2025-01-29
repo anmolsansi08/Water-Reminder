@@ -48,6 +48,7 @@ def send_email(to_email):
         log_message(f"Sent to {to_email}: {response.status_code}, Response: {response.text}")
         return response.status_code
     except requests.exceptions.RequestException as e:
+        print(e)
         log_message(f"Failed to send to {to_email}: {e}")
         return None
 
