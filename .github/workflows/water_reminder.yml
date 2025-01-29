@@ -1,0 +1,28 @@
+name: Water Reminder
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour
+  workflow_dispatch:  # Allows manual run
+
+jobs:
+  send_email:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install requests pytz
+
+      - name: Run water reminder script
+        env:
+          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
+        run: python send_reminders.py
