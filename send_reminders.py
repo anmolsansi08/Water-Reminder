@@ -1,11 +1,14 @@
-import requests
+import smtplib
 import datetime
 import pytz
 import os
+from email.mime.text import MIMEText
 
-# Mailgun API credentials
-MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY", "your-mailgun-api-key")
-MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN", "your-mailgun-domain")
+# Brevo (Sendinblue) SMTP Credentials from Environment Variables
+SMTP_SERVER = "smtp-relay.brevo.com"
+SMTP_PORT = 587
+SMTP_USERNAME = os.getenv("BREVO_USERNAME", "your-brevo-username")
+SMTP_PASSWORD = os.getenv("BREVO_PASSWORD", "your-brevo-password")
 
 # Log file
 LOG_FILE = "logs.txt"
@@ -27,33 +30,37 @@ hour = now.hour
 log_message(f"Current PST Time: {now.strftime('%Y-%m-%d %H:%M:%S')}")
 
 
-# Function to send email
+# Function to send email using Brevo SMTP
 def send_email(to_email):
     subject = "Drink Water Reminder 💧"
-    message = "Current Time: " + \
-              str(now) + \
-              "\n\n\n\n\nHey! This is your friendly reminder to drink water. Stay hydrated! 🚰\n\n\n" + \
-              "Current Time: " + \
-              str(now)
+    message_text = f"""\
+Current Time: {now}
+
+Hey! This is your friendly reminder to drink water. Stay hydrated! 🚰
+
+Current Time: {now}
+"""
+
+    msg = MIMEText(message_text)
+    msg["Subject"] = subject
+    msg["From"] = SMTP_USERNAME  # Must be the verified Brevo sender email
+    msg["To"] = to_email
 
     try:
-        response = requests.post(
-            f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
-            auth=("api", MAILGUN_API_KEY),
-            data={"from": f"Water Reminder <no-reply@{MAILGUN_DOMAIN}>",
-                  "to": to_email,
-                  "subject": subject,
-                  "text": message})
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()  # Secure connection
+            server.login(SMTP_USERNAME, SMTP_PASSWORD)  # Authenticate
+            server.sendmail(msg["From"], [msg["To"]], msg.as_string())
 
-        log_message(f"Sent to {to_email}: {response.status_code}, Response: {response.text}")
-        return response.status_code
-    except requests.exceptions.RequestException as e:
-        print(e)
+        log_message(f"Sent to {to_email}: Success")
+        return True
+    except Exception as e:
         log_message(f"Failed to send to {to_email}: {e}")
-        return None
+        return False
 
 
-if 8 <= hour < 22:  # Run only between 8 AM - 10 PM PST
+# Send emails only between 8 AM - 10 PM PST
+if 8 <= hour < 22:
     if not os.path.exists("emails.txt"):
         log_message("No email list found (emails.txt missing). Exiting.")
     else:
@@ -67,7 +74,7 @@ if 8 <= hour < 22:  # Run only between 8 AM - 10 PM PST
                 email = email.strip()
                 if email:
                     log_message(f"Processing email: {email}")
-                    status = send_email(email)
+                    send_email(email)
                 else:
                     log_message("Skipped empty email entry.")
 else:
