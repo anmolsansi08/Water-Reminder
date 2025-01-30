@@ -9,8 +9,6 @@ SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 SMTP_USERNAME = os.getenv("GMAIL_USERNAME", "your-email@gmail.com")
 SMTP_PASSWORD = os.getenv("GMAIL_PASSWORD", "your-gmail-app-password")
-
-# Log file
 LOG_FILE = "logs.txt"
 
 
