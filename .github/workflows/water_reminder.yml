@@ -2,7 +2,8 @@ name: Water Reminder
 
 on:
   schedule:
-    - cron: "0 16-6 * * *"  # Runs every hour between 8 AM - 10 PM UTC
+    - cron: "0 0-6 * * *"  
+    - cron: "0 16-23 * * *"  
   workflow_dispatch:  # Allows manual execution
 
 jobs:
