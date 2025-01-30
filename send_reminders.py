@@ -4,11 +4,11 @@ import pytz
 import os
 from email.mime.text import MIMEText
 
-# Brevo (Sendinblue) SMTP Credentials from Environment Variables
-SMTP_SERVER = "smtp-relay.brevo.com"
+# Gmail SMTP Credentials from Environment Variables
+SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USERNAME = os.getenv("BREVO_USERNAME", "your-brevo-username")
-SMTP_PASSWORD = os.getenv("BREVO_PASSWORD", "your-brevo-password")
+SMTP_USERNAME = os.getenv("GMAIL_USERNAME", "your-email@gmail.com")
+SMTP_PASSWORD = os.getenv("GMAIL_PASSWORD", "your-gmail-app-password")
 
 # Log file
 LOG_FILE = "logs.txt"
@@ -30,7 +30,7 @@ hour = now.hour
 log_message(f"Current PST Time: {now.strftime('%Y-%m-%d %H:%M:%S')}")
 
 
-# Function to send email using Brevo SMTP
+# Function to send email using Gmail SMTP
 def send_email(to_email):
     subject = "Drink Water Reminder 💧"
     message_text = f"""\
@@ -43,7 +43,7 @@ Current Time: {now}
 
     msg = MIMEText(message_text)
     msg["Subject"] = subject
-    msg["From"] = SMTP_USERNAME  # Must be the verified Brevo sender email
+    msg["From"] = SMTP_USERNAME
     msg["To"] = to_email
 
     try:

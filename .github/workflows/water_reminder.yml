@@ -23,8 +23,8 @@ jobs:
 
       - name: Run water reminder script
         env:
-          BREVO_USERNAME: ${{ secrets.BREVO_USERNAME }}
-          BREVO_PASSWORD: ${{ secrets.BREVO_PASSWORD }}
+          GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
         run: python send_reminders.py
 
       - name: Upload logs (for debugging)
