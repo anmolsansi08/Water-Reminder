@@ -1,35 +1,35 @@
-name: Water Reminder
+# name: Water Reminder
 
-on:
-  schedule:
-    - cron: "0 0-6 * * *"  
-    - cron: "0 16-23 * * *"  
-  workflow_dispatch:  # Allows manual execution
+# on:
+#   schedule:
+#     - cron: "0 0-6 * * *"  
+#     - cron: "0 16-23 * * *"  
+#   workflow_dispatch:  # Allows manual execution
 
-jobs:
-  send_email:
-    runs-on: ubuntu-latest
+# jobs:
+#   send_email:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.9'
 
-      - name: Install dependencies
-        run: pip install pytz
+#       - name: Install dependencies
+#         run: pip install pytz
 
-      - name: Run water reminder script
-        env:
-          GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
-          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
-        run: python send_reminders.py
+#       - name: Run water reminder script
+#         env:
+#           GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
+#           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+#         run: python send_reminders.py
 
-      - name: Upload logs (for debugging)
-        uses: actions/upload-artifact@v3
-        with:
-          name: water-reminder-logs
-          path: logs.txt
+#       - name: Upload logs (for debugging)
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: water-reminder-logs
+#           path: logs.txt
