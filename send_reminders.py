@@ -34,11 +34,11 @@ log_message(f"Current PST Time: {now.strftime('%Y-%m-%d %H:%M:%S')}")
 def send_email(to_email):
     subject = "Drink Water Reminder 💧"
     message_text = f"""\
-Current Time: {now}
+Current Time: {now.strftime('%Y-%m-%d %H:%M')}
 
 Hey! This is your friendly reminder to drink water. Stay hydrated! 🚰
 
-Current Time: {now}
+Current Time: {now.strftime('%Y-%m-%d %H:%M')}
 """
 
     msg = MIMEText(message_text)
